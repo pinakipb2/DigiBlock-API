@@ -1,0 +1,9 @@
+# dependencies
+/node_modules
+
+# misc
+.env
+.env.development
+.env.production
+
+npm-debug.log*
