@@ -2,6 +2,7 @@ const express = require('express');
 const createError = require('http-errors');
 const morgan = require('morgan');
 require('dotenv').config({ path: './.env.development' });
+require('./api/config/init_mongodb.config');
 
 const app = express();
 app.use(express.json());
