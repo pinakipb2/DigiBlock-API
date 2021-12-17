@@ -1,10 +1,12 @@
 const express = require('express');
+const cors = require('cors');
 const createError = require('http-errors');
 const morgan = require('morgan');
 require('dotenv').config({ path: './.env.development' });
 require('./api/config/init_mongodb.config');
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan('dev'));
@@ -13,7 +15,7 @@ app.get('/', async (req, res, next) => {
   res.send({ message: 'Awesome it works 😎' });
 });
 
-app.use('/api', require('./api/routes/Hello.route'));
+app.use('/api/admin', require('./api/routes/Admin.route'));
 
 app.use((req, res, next) => {
   next(createError.NotFound());
