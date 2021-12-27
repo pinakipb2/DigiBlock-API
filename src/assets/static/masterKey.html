@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,49 +15,57 @@
             padding: 0 !important;
             width: 100% !important;
             background: #f1f1f1;
-            font-family: 'Work Sans',sans-serif;
+            font-family: 'Work Sans', sans-serif;
         }
+
         * {
             -ms-text-size-adjust: 100%;
             -webkit-text-size-adjust: 100%;
         }
+
         div[style*="margin: 16px 0"] {
             margin: 0 !important;
         }
-        .main{
+
+        .main {
             width: 600px;
             background-color: white;
             align-content: center;
         }
-        h1{
+
+        h1 {
             color: black;
             margin-top: 5px;
             font-weight: 400;
         }
-        p{ 
+
+        p {
             padding: 20px 30px;
             font-size: 14px;
             letter-spacing: 1.5px;
             color: #353636;
             margin-bottom: 40px;
         }
-        footer{
+
+        footer {
             color: white;
             background-color: black;
             padding: 30px;
         }
     </style>
 </head>
+
 <body>
     <center style="width: 100%; background-color: #f1f1f1;">
-    <div class="main">
-        <img src="cid:logo" height="100" alt="logo" style="margin-top: 20px;">
-        <h1 style="margin-top: 20px;">Hello! {{username}}</h1>
-        <p style="margin-bottom: 2px;">Thanks for Registering with DigiBlock.</p>
-        <p style="margin-top: 0px; margin-bottom: 0%;">Your Master-Key is : {{masterKey}}</p>
-        <p style="margin-top: 0px; color: red;">Master Key will not be sent again. Keep this mail safe.</p>
-        <footer>&copy; 2021 DigiBlock. All Rights Reserved</footer>
-    </div>
+        <div class="main">
+            <img src="cid:logo" height="100" alt="logo" style="margin-top: 20px;">
+            <h1 style="margin-top: 20px;">Hello! {{name}}</h1>
+            <p style="margin-bottom: 2px;">{{text}}</p>
+            <p style="margin-top: 0px; margin-bottom: 0%;">Your Master-Key is : {{masterKey}}</p>
+            <p style="margin-top: 0px; color: red;">Master Key will not be sent again. Keep this mail safe.</p>
+            <footer>&copy; 2021 DigiBlock. All Rights Reserved</footer>
+        </div>
     </center>
 </body>
+
 </html>
