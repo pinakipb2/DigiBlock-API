@@ -29,14 +29,15 @@ router.post('/send-master-key', async (req, res, next) => {
       name, address, email, masterKey,
     } = req.body;
     const decMasterKey = decrypt(process.env.MASTER_KEY_SECRET, masterKey);
-    // console.log(`Received Master Key : ${decMasterKey.data}`);
     if (decMasterKey.status === 0) {
       throw decMasterKey.data;
     }
+    // console.log(`Received Master Key : ${decMasterKey.data}`);
 
     const admin = new Admin({
       name,
       address,
+      isVerified: true,
     });
     await admin.save();
 
