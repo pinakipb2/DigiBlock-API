@@ -9,7 +9,6 @@ const { encrypt, decrypt } = require('../controllers/encryptDecrypt');
 router.post('/gen-master-key', async (req, res, next) => {
   try {
     const masterKey = genMasterKey();
-    // console.log(masterKey);
     const encMasterKey = encrypt(process.env.MASTER_KEY_SECRET, masterKey);
     if (encMasterKey.status === 0) {
       throw encMasterKey.data;
@@ -24,7 +23,6 @@ router.post('/gen-master-key', async (req, res, next) => {
 
 router.post('/send-master-key', async (req, res, next) => {
   try {
-    // console.log(req.body);
     const {
       name, address, email, masterKey,
     } = req.body;
@@ -32,15 +30,11 @@ router.post('/send-master-key', async (req, res, next) => {
     if (decMasterKey.status === 0) {
       throw decMasterKey.data;
     }
-    // console.log(`Received Master Key : ${decMasterKey.data}`);
-
     const admin = new Admin({
       name,
       address,
-      isVerified: true,
     });
     await admin.save();
-
     const text = 'Thank You for Associating as an Admin with DigiBlock.';
     const replacements = {
       name,
@@ -50,7 +44,6 @@ router.post('/send-master-key', async (req, res, next) => {
     const maillist = [email];
     const subject = 'Master key 🔑';
     sendMasterKeyMail(path.join(__dirname, '../../assets/static/masterKey.html'), replacements, maillist, subject, text);
-
     res.status(200).send('OK');
   } catch (err) {
     next(err);
@@ -62,6 +55,40 @@ router.post('/validate-master-key', async (req, res, next) => {
     const { masterKey, masterKeyHash } = req.body;
     const status = await bcrypt.compare(masterKey, masterKeyHash);
     res.send({ status });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/verify', async (req, res, next) => {
+  try {
+    const { address } = req.body;
+    const admin = await Admin.findOne({ address: address.toLowerCase() });
+    if (admin.isVerified === false) {
+      await Admin.updateOne({ address: address.toLowerCase() }, { isVerified: true });
+    }
+    res.status(200).send('OK');
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/is-verified', async (req, res, next) => {
+  try {
+    const { address } = req.body;
+    const admin = await Admin.findOne({ address: address.toLowerCase() });
+    res.send({ status: admin.isVerified });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/remove', async (req, res, next) => {
+  try {
+    const { address } = req.body;
+    const admin = await Admin.findOne({ address: address.toLowerCase() });
+    await admin.remove();
+    res.status(200).send('OK');
   } catch (err) {
     next(err);
   }
