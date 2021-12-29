@@ -32,7 +32,7 @@ router.post('/send-master-key', async (req, res, next) => {
     }
     const admin = new Admin({
       name,
-      address,
+      address: address.toLowerCase(),
     });
     await admin.save();
     const text = 'Thank You for Associating as an Admin with DigiBlock.';
@@ -42,7 +42,7 @@ router.post('/send-master-key', async (req, res, next) => {
       text,
     };
     const maillist = [email];
-    const subject = 'Master key 🔑';
+    const subject = 'Admin Master key 🔑';
     sendMasterKeyMail(path.join(__dirname, '../../assets/static/masterKey.html'), replacements, maillist, subject, text);
     res.status(200).send('OK');
   } catch (err) {
