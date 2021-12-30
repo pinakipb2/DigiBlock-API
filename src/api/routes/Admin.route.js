@@ -32,7 +32,7 @@ router.post('/send-master-key', async (req, res, next) => {
     }
     const admin = new Admin({
       name,
-      address: address.toLowerCase(),
+      address,
     });
     await admin.save();
     const text = 'Thank You for Associating as an Admin with DigiBlock.';
