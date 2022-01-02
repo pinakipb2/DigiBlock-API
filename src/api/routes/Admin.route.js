@@ -9,7 +9,22 @@ const { encrypt, decrypt } = require('../controllers/encryptDecrypt');
 router.post('/gen-master-key', async (req, res, next) => {
   try {
     const masterKey = genMasterKey();
-    const encMasterKey = encrypt(process.env.MASTER_KEY_SECRET, masterKey);
+    const encMasterKey = encrypt(process.env.ADMIN_MASTER_KEY_SECRET, masterKey);
+    if (encMasterKey.status === 0) {
+      throw encMasterKey.data;
+    }
+    const salt = await bcrypt.genSalt(11);
+    const hashedMasterKey = await bcrypt.hash(masterKey, salt);
+    res.send({ masterKey: encMasterKey.data, hashedMasterKey });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/gen-issuer-master-key', async (req, res, next) => {
+  try {
+    const masterKey = genMasterKey();
+    const encMasterKey = encrypt(process.env.ISSUER_MASTER_KEY_SECRET, masterKey);
     if (encMasterKey.status === 0) {
       throw encMasterKey.data;
     }
@@ -26,7 +41,7 @@ router.post('/send-master-key', async (req, res, next) => {
     const {
       name, address, email, masterKey,
     } = req.body;
-    const decMasterKey = decrypt(process.env.MASTER_KEY_SECRET, masterKey);
+    const decMasterKey = decrypt(process.env.ADMIN_MASTER_KEY_SECRET, masterKey);
     if (decMasterKey.status === 0) {
       throw decMasterKey.data;
     }
@@ -43,6 +58,30 @@ router.post('/send-master-key', async (req, res, next) => {
     };
     const maillist = [email];
     const subject = 'Admin Master key 🔑';
+    sendMasterKeyMail(path.join(__dirname, '../../assets/static/masterKey.html'), replacements, maillist, subject, text);
+    res.status(200).send('OK');
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/send-issuer-master-key', async (req, res, next) => {
+  try {
+    const {
+      name, email, masterKey,
+    } = req.body;
+    const decMasterKey = decrypt(process.env.ISSUER_MASTER_KEY_SECRET, masterKey);
+    if (decMasterKey.status === 0) {
+      throw decMasterKey.data;
+    }
+    const text = 'Thank You for Associating as an Issuer with DigiBlock.';
+    const replacements = {
+      name,
+      masterKey: decMasterKey.data,
+      text,
+    };
+    const maillist = [email];
+    const subject = 'Issuer Master key 🔑';
     sendMasterKeyMail(path.join(__dirname, '../../assets/static/masterKey.html'), replacements, maillist, subject, text);
     res.status(200).send('OK');
   } catch (err) {
