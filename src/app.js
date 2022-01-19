@@ -15,8 +15,8 @@ app.get('/', async (req, res, next) => {
   res.send({ message: 'Awesome it works 😎' });
 });
 
-app.use('/api/admin', require('./api/routes/Admin.route'));
-app.use('/api/issuer', require('./api/routes/Issuer.route'));
+app.use('/api/v1/admin', require('./api/routes/Admin.route'));
+app.use('/api/v1/issuer', require('./api/routes/Issuer.route'));
 
 app.use((req, res, next) => {
   next(createError.NotFound());
