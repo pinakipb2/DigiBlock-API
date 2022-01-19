@@ -3,8 +3,8 @@ const uniqueValidator = require('mongoose-unique-validator');
 
 const { Schema } = mongoose;
 
-const AdminSchema = new Schema({
-  name: {
+const IssuerSchema = new Schema({
+  orgName: {
     type: String,
     required: true,
   },
@@ -13,14 +13,15 @@ const AdminSchema = new Schema({
     required: true,
     unique: true,
   },
-  isVerified: {
-    type: Boolean,
-    default: false,
-  },
+  docType: [{
+    type: String,
+    required: true,
+    unique: true,
+  }],
 }, { timestamps: true });
 
-AdminSchema.plugin(uniqueValidator);
+IssuerSchema.plugin(uniqueValidator);
 
-const Admin = mongoose.model('admin', AdminSchema);
+const Issuer = mongoose.model('issuer', IssuerSchema);
 
-module.exports = Admin;
+module.exports = Issuer;
