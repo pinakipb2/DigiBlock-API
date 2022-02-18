@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const uniqueValidator = require('mongoose-unique-validator');
+import mongoose from 'mongoose';
+import uniqueValidator from 'mongoose-unique-validator';
 
 const { Schema } = mongoose;
 
@@ -24,4 +24,4 @@ IssuerSchema.plugin(uniqueValidator);
 
 const Issuer = mongoose.model('issuer', IssuerSchema);
 
-module.exports = Issuer;
+export default Issuer;

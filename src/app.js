@@ -1,12 +1,19 @@
-const express = require('express');
-const cors = require('cors');
-const createError = require('http-errors');
+import express from 'express';
+import './api/config/env.config';
+import cors from 'cors';
+import createError from 'http-errors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import xss from 'xss-clean';
+import DBConnect from './api/config/init_mongodb.config';
+import logger from './api/log/logger';
+
+import { AdminRoutes, IssuerRoutes } from './api/routes';
+
 const morgan = require('morgan');
-const helmet = require('helmet');
-const xss = require('xss-clean');
-const rateLimit = require('express-rate-limit');
-require('dotenv').config({ path: './.env.development' });
-require('./api/config/init_mongodb.config');
+
+// Connect to DB
+DBConnect();
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -29,8 +36,8 @@ app.get('/', async (req, res, next) => {
   res.send({ message: 'Awesome it works 😎' });
 });
 
-app.use('/api/v1/admin', require('./api/routes/Admin.route'));
-app.use('/api/v1/issuer', require('./api/routes/Issuer.route'));
+app.use('/api/v1/admin', AdminRoutes);
+app.use('/api/v1/issuer', IssuerRoutes);
 
 app.use((req, res, next) => {
   next(createError.NotFound());
@@ -45,4 +52,7 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 @ http://localhost:${PORT}`));
+app.listen(PORT, () => {
+  console.log(`🚀 @ http://localhost:${PORT}`);
+  // logger.info(`Server started running on PORT :${PORT}`);
+});

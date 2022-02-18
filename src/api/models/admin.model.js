@@ -1,26 +1,29 @@
-const mongoose = require('mongoose');
-const uniqueValidator = require('mongoose-unique-validator');
+import mongoose from 'mongoose';
+import uniqueValidator from 'mongoose-unique-validator';
 
 const { Schema } = mongoose;
 
-const AdminSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
+const AdminSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    address: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
-  address: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  isVerified: {
-    type: Boolean,
-    default: false,
-  },
-}, { timestamps: true });
+  { timestamps: true },
+);
 
 AdminSchema.plugin(uniqueValidator);
 
 const Admin = mongoose.model('admin', AdminSchema);
 
-module.exports = Admin;
+export default Admin;

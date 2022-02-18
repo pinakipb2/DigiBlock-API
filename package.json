@@ -4,8 +4,8 @@
   "description": "DigiBlock API",
   "main": "app.js",
   "scripts": {
-    "start": "node src/app.js",
-    "dev": "nodemon src/app.js",
+    "start": "node -r esm src/app.js",
+    "dev": "nodemon -r esm src/app.js",
     "lint": "eslint src/**/*.js",
     "lint-fix": "eslint src/**/*.js --fix"
   },
@@ -16,6 +16,7 @@
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
+    "esm": "^3.2.25",
     "express": "^4.17.1",
     "express-rate-limit": "^6.1.0",
     "handlebars": "^4.7.7",
@@ -27,6 +28,8 @@
     "nanoid": "^3.1.30",
     "nodemailer": "^6.7.2",
     "nodemailer-sendgrid-transport": "^0.2.0",
+    "winston": "^3.6.0",
+    "winston-mongodb": "^5.0.7",
     "xss-clean": "^0.1.1"
   },
   "devDependencies": {
