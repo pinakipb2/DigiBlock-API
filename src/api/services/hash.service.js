@@ -1,14 +1,14 @@
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
-import StatusDataDto from '../dtos/statusData.dto';
+import StatusDataDto from '../dtos/StatusData.dto';
 
 class HashService {
-  unsafeHash(data) {
-    return crypto.createHmac('sha256', process.env.HASH_SECRET).update(data).digest('hex');
+  unsafeHash(secret, data) {
+    return crypto.createHmac('sha256', secret).update(data).digest('hex');
   }
 
   async safeHash(data) {
-    const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(11);
     const hash = await bcrypt.hash(data, salt);
     return hash;
   }
