@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node -r esm src/app.js",
     "dev": "nodemon -r esm src/app.js",
+    "genkey": "node src/keys/generateKeys.js",
     "lint": "eslint src/**/*.js",
     "lint-fix": "eslint src/**/*.js --fix"
   },
