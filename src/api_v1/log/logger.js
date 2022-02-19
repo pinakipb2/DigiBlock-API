@@ -1,7 +1,8 @@
 import { createLogger, transports, format } from 'winston';
 import 'winston-mongodb';
 
-const logger = createLogger({
+// information logger
+const infoLogger = createLogger({
   transports: [
     new transports.MongoDB({
       level: 'info',
@@ -10,6 +11,12 @@ const logger = createLogger({
       collection: 'infoLogs',
       format: format.combine(format.timestamp(), format.json()),
     }),
+  ],
+});
+
+// error logger
+const errorLogger = createLogger({
+  transports: [
     new transports.MongoDB({
       level: 'error',
       db: `${process.env.MONGODB_URI}/${process.env.DB_NAME}`,
@@ -20,4 +27,4 @@ const logger = createLogger({
   ],
 });
 
-export default logger;
+export { infoLogger, errorLogger };

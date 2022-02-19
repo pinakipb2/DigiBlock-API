@@ -1,18 +1,27 @@
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
-import StatusDataDto from '../dtos/StatusData.dto';
+import { StatusDataDto } from '../dtos';
 
 class HashService {
-  unsafeHash(secret, data) {
-    return crypto.createHmac('sha256', secret).update(data).digest('hex');
+  // Generate a Hash (Hmac Object)
+  unsafeHash(data) {
+    return crypto.createHmac('sha256', process.env.UNSAFE_HASH_SECRET).update(data).digest('hex');
   }
 
+  // Generated Bcrypt hash
   async safeHash(data) {
     const salt = await bcrypt.genSalt(11);
     const hash = await bcrypt.hash(data, salt);
     return hash;
   }
 
+  // Bcrypt comparator
+  async compareSafeHash(data, hash) {
+    const status = await bcrypt.compare(data, hash);
+    return status;
+  }
+
+  // Encrypt Algo
   encrypt(_key, text) {
     try {
       const Text = text.toString();
@@ -26,6 +35,7 @@ class HashService {
     }
   }
 
+  // Decrypt Algo
   decrypt(_key, text) {
     try {
       const key = Buffer.from(_key, 'utf-8');

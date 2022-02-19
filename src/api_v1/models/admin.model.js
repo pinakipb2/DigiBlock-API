@@ -5,10 +5,6 @@ const { Schema } = mongoose;
 
 const AdminSchema = new Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
     address: {
       type: String,
       required: true,
@@ -19,7 +15,7 @@ const AdminSchema = new Schema(
       default: false,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 AdminSchema.plugin(uniqueValidator);
