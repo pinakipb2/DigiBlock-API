@@ -5,11 +5,7 @@ const router = express.Router();
 
 router.get('/generate-master-key', adminController.generateMasterKey);
 
-router.get('/generate-issuer-master-key', adminController.generateIssuerMasterKey);
-
 router.post('/send-master-key', adminController.sendMasterKey);
-
-router.post('/send-issuer-master-key', adminController.sendIssuerMasterKey);
 
 router.post('/add-admin', adminController.addAdmin);
 

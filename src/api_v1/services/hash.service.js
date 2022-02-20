@@ -28,7 +28,7 @@ class HashService {
       const key = Buffer.from(_key, 'utf-8');
       const plainText = Buffer.from(Text, 'utf8');
       const cipher = crypto.createCipheriv('aes-256-ecb', key, Buffer.from([]));
-      const cipherText = Buffer.concat([cipher.update(plainText), cipher.final()]).toString('base64');
+      const cipherText = Buffer.concat([cipher.update(plainText), cipher.final()]).toString('hex');
       return new StatusDataDto(1, cipherText);
     } catch (err) {
       return new StatusDataDto(0, err.message);
@@ -40,7 +40,7 @@ class HashService {
     try {
       const key = Buffer.from(_key, 'utf-8');
       const decipher = crypto.createDecipheriv('aes-256-ecb', key, Buffer.from([]));
-      const clearText = decipher.update(text, 'base64', 'utf8') + decipher.final('utf-8');
+      const clearText = decipher.update(text, 'hex', 'utf8') + decipher.final('utf-8');
       return new StatusDataDto(1, clearText);
     } catch (err) {
       return new StatusDataDto(0, err.message);

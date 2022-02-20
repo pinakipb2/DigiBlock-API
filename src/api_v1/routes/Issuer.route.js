@@ -3,9 +3,13 @@ import { issuerController } from '../controllers';
 
 const router = express.Router();
 
-router.post('/validate-master-key', issuerController.validateMasterKey);
+router.get('/generate-master-key', issuerController.generateMasterKey);
+
+router.post('/send-master-key', issuerController.sendMasterKey);
 
 router.post('/add-issuer', issuerController.addIssuer);
+
+router.post('/validate-master-key', issuerController.validateMasterKey);
 
 router.get('/all-issuers', issuerController.allIssuers);
 

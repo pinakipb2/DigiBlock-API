@@ -27,26 +27,6 @@ const adminController = {
       return next(createError.InternalServerError());
     }
   },
-  async generateIssuerMasterKey(req, res, next) {
-    try {
-      // Generate a master key of length 14
-      const masterKey = MasterKeyService.generateMasterKey();
-      // Encrypt the master key
-      const encMasterKey = HashService.encrypt(process.env.ISSUER_MASTER_KEY_SECRET, masterKey);
-      if (encMasterKey.status === 0) {
-        errorLogger.error('Error in encryption in adminController in generateIssuerMasterKey');
-        return next(createError.InternalServerError());
-      }
-      // Two times Hashing the master key
-      const hash = HashService.unsafeHash(masterKey);
-      const hashedMasterKey = await HashService.safeHash(hash);
-      // Sending encrypted master key and two times hashed master key
-      res.send({ masterKey: encMasterKey.data, hashedMasterKey });
-    } catch (err) {
-      errorLogger.error('Error in unsafeHash or safeHash in adminController in generateIssuerMasterKey');
-      return next(createError.InternalServerError());
-    }
-  },
   async validateMasterKey(req, res, next) {
     try {
       // Validate req.body payload
@@ -201,39 +181,6 @@ const adminController = {
         return next(createError.UnprocessableEntity(err.message));
       }
       errorLogger.error(`Error in sending mail to ${req.body.email} in adminController in sendMasterKey`);
-      return next(createError.InternalServerError());
-    }
-  },
-  async sendIssuerMasterKey(req, res, next) {
-    try {
-      // Validate req.body payload
-      const result = await userSendEmailSchema.validateAsync(req.body);
-      const { name, email, masterKey } = result;
-      // Decrypt Master Key
-      const decMasterKey = HashService.decrypt(process.env.ISSUER_MASTER_KEY_SECRET, masterKey);
-      if (decMasterKey.status === 0) {
-        errorLogger.error('Error in decryption in adminController in sendIssuerMasterKey');
-        return next(createError.InternalServerError());
-      }
-      const text = 'Thank You for Associating as an Issuer with DigiBlock.';
-      const replacements = {
-        name,
-        masterKey: decMasterKey.data,
-        text,
-        year: new Date().getFullYear(),
-      };
-      const maillist = [email];
-      const subject = 'Issuer Master key 🔑';
-      // Send email
-      await sendMasterKeyMail(path.join(__dirname, '../../assets/static/masterKey.html'), replacements, maillist, subject, text);
-      const ok = new StatusDataDto(1, 'Mail Sent');
-      res.send(ok);
-    } catch (err) {
-      if (err.isJoi === true) {
-        errorLogger.error('Error in request body validation in adminController in sendIssuerMasterKey');
-        return next(createError.UnprocessableEntity(err.message));
-      }
-      errorLogger.error(`Error in sending mail to ${req.body.email} in adminController in sendIssuerMasterKey`);
       return next(createError.InternalServerError());
     }
   },
