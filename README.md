@@ -9,7 +9,7 @@
 <h4 align="center">REST API which Powers DigiBlock</h4>
 <p align="center">
   <a href="#file-structure">File Structure</a> •
-  <a href="#environment-configuration">Environment Configurations</a>
+  <a href="#environment-configurations">Environment Configurations</a>
 </p>
 
 ## File Structure
