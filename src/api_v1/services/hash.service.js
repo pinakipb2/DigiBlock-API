@@ -24,23 +24,27 @@ class HashService {
   // Encrypt Algo
   encrypt(_key, text) {
     try {
-      const Text = text.toString();
-      const key = Buffer.from(_key, 'utf-8');
-      const plainText = Buffer.from(Text, 'utf8');
-      const cipher = crypto.createCipheriv('aes-256-ecb', key, Buffer.from([]));
-      const cipherText = Buffer.concat([cipher.update(plainText), cipher.final()]).toString('hex');
-      return new StatusDataDto(1, cipherText);
+      const IV = crypto.randomBytes(16);
+      const cipher = crypto.createCipheriv('aes-256-gcm', _key, IV);
+      const encrypted = cipher.update(text, 'utf8', 'hex') + cipher.final('hex');
+      const payload = IV.toString('hex') + encrypted + cipher.getAuthTag().toString('hex');
+      const payload64 = Buffer.from(payload, 'hex').toString('base64');
+      return new StatusDataDto(1, payload64);
     } catch (err) {
       return new StatusDataDto(0, err.message);
     }
   }
 
   // Decrypt Algo
-  decrypt(_key, text) {
+  decrypt(_key, payload64) {
     try {
-      const key = Buffer.from(_key, 'utf-8');
-      const decipher = crypto.createDecipheriv('aes-256-ecb', key, Buffer.from([]));
-      const clearText = decipher.update(text, 'hex', 'utf8') + decipher.final('utf-8');
+      const payload = Buffer.from(payload64, 'base64').toString('hex');
+      const IV = payload.substring(0, 32);
+      const encrypted = payload.substring(32, payload.length - 32);
+      const authTag = payload.substring(payload.length - 32, payload.length);
+      const decipher = crypto.createDecipheriv('aes-256-gcm', _key, Buffer.from(IV, 'hex'));
+      decipher.setAuthTag(Buffer.from(authTag, 'hex'));
+      const clearText = decipher.update(encrypted, 'hex', 'utf8') + decipher.final('utf8');
       return new StatusDataDto(1, clearText);
     } catch (err) {
       return new StatusDataDto(0, err.message);
