@@ -21,10 +21,14 @@ const limiter = rateLimit({
   max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  message: {
+    status: 429,
+    message: 'Too Many Requests',
+  },
 });
 
 const corsOption = {
-  origin: ['http://localhost:3000'],
+  origin: [process.env.FRONTEND_URL],
 };
 
 const app = express();
@@ -65,5 +69,5 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 @ http://localhost:${PORT}`);
-  infoLogger.info(`Server started running on PORT :${PORT}`);
+  infoLogger.info(`Server started running on PORT : ${PORT}`);
 });
