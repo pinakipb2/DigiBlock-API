@@ -66,7 +66,7 @@ const adminController = {
       await admin.save();
       // Send OK if everything passes
       const ok = new StatusDataDto(1, 'Admin Added');
-      res.send(ok);
+      res.status(201).send(ok);
     } catch (err) {
       if (err.isJoi === true) {
         errorLogger.error('Error in request body validation in adminController in addAdmin');
